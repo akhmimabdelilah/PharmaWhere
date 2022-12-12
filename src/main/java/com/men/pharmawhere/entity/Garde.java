@@ -28,7 +28,4 @@ public class Garde {
 	private int id;
 	@Enumerated(EnumType.STRING)
 	private GardeType type;
-	
-	@OneToMany(mappedBy = "garde",fetch = FetchType.LAZY)
-	private List<PharmacieGarde> pharmacieGarde;
 }

@@ -32,16 +32,20 @@ public class VilleController {
 	public Ville create(@RequestBody Ville ville) {
 		return villeRepository.save(ville);
 	}
-	
+
 	@GetMapping("/{id}")
 	public Ville findById(@PathVariable(required = true) int id) {
 		return villeRepository.findById(id);
 	}
+
 	@PutMapping("/{id}")
-	public Ville update(@PathVariable(required = true) int id) {
-		Ville ville = villeRepository.findById(id);
-		return villeRepository.save(ville);
+	public Ville update(@PathVariable(required = true) int id, @RequestBody Ville ville) {
+		Ville thisVille = villeRepository.findById(id);
+		if (ville.getNom() != null)
+			thisVille.setNom(ville.getNom());
+		return villeRepository.save(thisVille);
 	}
+
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable(required = true) int id) {
 		Ville ville = villeRepository.findById(id);
@@ -49,5 +53,5 @@ public class VilleController {
 	}
 	
 	
-	
+
 }

@@ -21,28 +21,35 @@ import com.men.pharmawhere.repository.GardeRepository;
 public class GardeController {
 	@Autowired
 	private GardeRepository gardeRepository;
+
 	@GetMapping("/")
 	public List<Garde> findAll() {
 		return gardeRepository.findAll();
 	}
+
 	@PostMapping("/")
 	public Garde create(@RequestBody Garde garde) {
 		return gardeRepository.save(garde);
 	}
-	
+
 	@GetMapping("/{id}")
 	public Garde findById(@PathVariable(required = true) int id) {
 		return gardeRepository.findById(id);
 	}
+
 	@PutMapping("/{id}")
-	public Garde update(@PathVariable(required = true) int id) {
-		Garde garde = gardeRepository.findById(id);
-		return gardeRepository.save(garde);
+	public Garde update(@PathVariable(required = true) int id, @RequestBody Garde garde) {
+		Garde thisGarde = gardeRepository.findById(id);
+		if (garde.getType() != null)
+			thisGarde.setType(garde.getType());
+		
+		return gardeRepository.save(thisGarde);
 	}
+
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable(required = true) int id) {
 		Garde garde = gardeRepository.findById(id);
 		gardeRepository.delete(garde);
 	}
-	
+
 }

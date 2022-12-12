@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.men.pharmawhere.dto.ZoneDTO;
 import com.men.pharmawhere.entity.PharmacieGarde;
 import com.men.pharmawhere.entity.Ville;
 import com.men.pharmawhere.entity.Zone;
+import com.men.pharmawhere.repository.VilleRepository;
 import com.men.pharmawhere.repository.ZoneRepository;
 
 @RestController
@@ -22,30 +24,41 @@ import com.men.pharmawhere.repository.ZoneRepository;
 public class ZoneController {
 	@Autowired
 	private ZoneRepository zoneRepository;
+	@Autowired
+	private VilleRepository villeRepository;
+
 	@GetMapping("/")
 	public List<Zone> findAll() {
 		return zoneRepository.findAll();
 	}
+
 	@PostMapping("/")
 	public Zone create(@RequestBody Zone zone) {
 		return zoneRepository.save(zone);
 	}
-	
+
 	@GetMapping("/{id}")
 	public Zone findById(@PathVariable(required = true) int id) {
 		return zoneRepository.findById(id);
 	}
-	
+
 	@PutMapping("/{id}")
-	public Zone update(@PathVariable(required = true) int id, @RequestBody Zone zone) {
-		
-		
-		return zoneRepository.save(zone);
+	public Zone update(@PathVariable(required = true) int id, @RequestBody ZoneDTO zone) {
+		Zone thisZone = zoneRepository.findById(id);
+		if (zone.getNom() != null)
+			thisZone.setNom(zone.getNom());
+		if (zone.getVille() != 0) {
+			Ville ville = villeRepository.findById(zone.getVille());
+			if (ville != null)
+				thisZone.setVille(ville);
+		}
+		return zoneRepository.save(thisZone);
 	}
+
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable(required = true) int id) {
 		Zone zone = zoneRepository.findById(id);
 		zoneRepository.delete(zone);
 	}
-	
+
 }
