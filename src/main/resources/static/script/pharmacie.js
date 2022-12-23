@@ -8,9 +8,19 @@ $(document)
 						url: "pharmacie/",
 						dataSrc: ''
 					},
+					columnDefs: [{
+						"targets": 1,
+						"render": function(data) {
+							return '<img src="data:image/jpeg;base64,'+data.image+'" height="100" width="100" alt="'+data.nom+'"/>';
+						}
+					}],
 					columns: [
 						{
 							data: "id"
+						},
+						{
+							data: null
+
 						},
 						{
 							data: "nom"
