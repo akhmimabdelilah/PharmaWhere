@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ma.project.pharmawhere.dto.PharmacieDTO;
 import ma.project.pharmawhere.model.Pharmacie;
+import ma.project.pharmawhere.model.PharmacieStatus;
 import ma.project.pharmawhere.model.Zone;
 import ma.project.pharmawhere.repository.PharmacieRepository;
 
@@ -30,7 +32,12 @@ public class PharmacieController {
 	public List<Pharmacie> findAll() {
 		return pharmacieRepository.findAll();
 	}
-
+	
+	@GetMapping("/all")
+	public List<Pharmacie> findAllUser() {
+		return pharmacieRepository.getApprovees();
+	}
+	
 	@PostMapping("/")
 	public Pharmacie create(@RequestParam("image") MultipartFile image,
 			@RequestParam("nom") String nom,
@@ -59,6 +66,21 @@ public class PharmacieController {
 		return pharmacieRepository.findById(id);
 	}
 
+	@PutMapping("/{id}/valid")
+	public Pharmacie approve(@PathVariable(required = true) int id) {
+		Pharmacie pharmacie = pharmacieRepository.findById(id);
+		pharmacie.setStatus(PharmacieStatus.APPROVEE);
+		return pharmacieRepository.save(pharmacie);
+	}
+	
+	@PutMapping("/{id}/invalid")
+	public Pharmacie refuse(@PathVariable(required = true) int id) {
+		Pharmacie pharmacie = pharmacieRepository.findById(id);
+		pharmacie.setStatus(PharmacieStatus.REFUSEE);
+		return pharmacieRepository.save(pharmacie);
+	}
+	
+	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable(required = true) int id) {
 		Pharmacie pharmacie = pharmacieRepository.findById(id);
@@ -68,6 +90,10 @@ public class PharmacieController {
 	@GetMapping("/count")
 	public long count() {
 		return pharmacieRepository.count();
+	}
+	@PostMapping("/nearby")
+	public List<Pharmacie> nearby(@RequestParam("log") double log, @RequestParam("lat") double lat ) {
+		return pharmacieRepository.nearby(log, lat, 2);
 	}
 
 }

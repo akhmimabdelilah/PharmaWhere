@@ -13,6 +13,12 @@ $(document)
 						"render": function(data) {
 							return '<img src="data:image/jpeg;base64,'+data.image+'" height="100" width="100" alt="'+data.nom+'"/>';
 						}
+					},
+					{
+						"targets": 3,
+						"render": function(data) {
+							return '<span id="etat" class="'+data.status+'">'+data.status+'</span>';
+						}
 					}],
 					columns: [
 						{
@@ -20,10 +26,12 @@ $(document)
 						},
 						{
 							data: null
-
 						},
 						{
 							data: "nom"
+						},
+						{
+							data: null
 						},
 						{
 							data: "lat"

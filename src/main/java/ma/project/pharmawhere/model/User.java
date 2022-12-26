@@ -2,18 +2,20 @@ package ma.project.pharmawhere.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "USER")
 public class User implements Serializable, UserDetails {
 	/**
 	 * 
@@ -24,6 +26,9 @@ public class User implements Serializable, UserDetails {
 	private Integer userId;
 	private String username;
 	private String password;
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	private List<Pharmacie> pharmacies;
 
 	public Integer getUserId() {
 		return userId;

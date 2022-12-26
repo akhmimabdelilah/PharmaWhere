@@ -51,7 +51,7 @@ public class PharmacieGardeController {
 	@PostMapping("/one")
 	public PharmacieGarde findId(@RequestBody PharmacieGardePK pharmacieGarde) {
 		Optional<PharmacieGarde> garde = pharmacieGardeRepository.findById(pharmacieGarde);
-		return garde.get();
+		return garde.orElse(null);
 	}
 	@DeleteMapping("/one")
 	public void delete(@RequestBody PharmacieGardePK pharmacieGarde) {
