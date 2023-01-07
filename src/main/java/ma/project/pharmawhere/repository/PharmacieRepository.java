@@ -23,8 +23,4 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Integer> {
 
 	@Query("select p from Pharmacie p, Zone z, Ville v Where p.zone = z AND z.ville = v AND v = :ville")
 	List<Pharmacie> getPharmaciesByVille(Ville ville);
-	
-	@Query("select p from Pharmacie p Where (p.log - :log) + (p.lat - :lat) < :threshold")
-	List<Pharmacie> getPharmaciesByZone(double log, double lat, double threshold);
-	
 }
