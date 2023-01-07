@@ -19,7 +19,7 @@ import ma.project.pharmawhere.model.Zone;
 import ma.project.pharmawhere.repository.PharmacieRepository;
 import ma.project.pharmawhere.repository.VilleRepository;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("ville")
 @CrossOrigin
@@ -59,6 +59,11 @@ public class VilleController {
 	public void delete(@PathVariable(required = true) int id) {
 		Ville ville = villeRepository.findById(id);
 		villeRepository.delete(ville);
+	}
+	
+	@GetMapping("/count")
+	public long findById() {
+		return villeRepository.count();
 	}
 	
 	

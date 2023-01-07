@@ -18,7 +18,7 @@ import ma.project.pharmawhere.model.Zone;
 import ma.project.pharmawhere.repository.PharmacieRepository;
 import ma.project.pharmawhere.repository.ZoneRepository;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("zone")
 @CrossOrigin

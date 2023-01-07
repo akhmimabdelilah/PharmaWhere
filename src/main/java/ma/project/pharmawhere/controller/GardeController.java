@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ma.project.pharmawhere.model.Garde;
 import ma.project.pharmawhere.model.Pharmacie;
 import ma.project.pharmawhere.repository.GardeRepository;
-
+@CrossOrigin
 @RestController
 @RequestMapping("garde")
 @CrossOrigin
