@@ -6,5 +6,5 @@ import ma.project.pharmawhere.model.PharmacieGarde;
 import ma.project.pharmawhere.model.PharmacieGardePK;
 
 public interface PharmacieGardeRepository extends JpaRepository<PharmacieGarde, PharmacieGardePK> {
-
+	PharmacieGarde findOneByPk(PharmacieGardePK pk);
 }

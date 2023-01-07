@@ -11,10 +11,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SpringFoxConfig {                                    
-    @Bean
-    public Docket api() { 
-    	return new Docket(DocumentationType.SWAGGER_2).select()
-   	         .apis(RequestHandlerSelectors.basePackage("ma.projectr.pharmawhere")).build();                                       
-    }
+public class SwaggerConfig {
+ 
+  @Bean
+  public Docket api() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .select()
+        .apis(RequestHandlerSelectors.any())
+        .paths(PathSelectors.ant("jjj"))
+        .build();
+  }
 }

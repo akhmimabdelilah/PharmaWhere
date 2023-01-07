@@ -1,6 +1,27 @@
+var map = L.map('map');
+map.setView([51.505, -0.09], 13);
+// Add a tile layer to the map
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+	maxZoom: 18
+}).addTo(map);
+
+console.log(map)
+
 $(document)
 	.ready(
 		function() {
+
+			// Add a marker to the map
+			var marker = L.marker([51.5, -0.09])
+			map.on('click', function(e) {
+				marker.setLatLng([e.latlng.lat, e.latlng.lng]);
+				$("#lat").val(e.latlng.lat);
+				$("#log").val(e.latlng.lng);
+			});
+			marker.addTo(map);
+
 
 			table = $('#tpharmacie')
 				.DataTable({
@@ -11,13 +32,13 @@ $(document)
 					columnDefs: [{
 						"targets": 1,
 						"render": function(data) {
-							return '<img src="data:image/jpeg;base64,'+data.image+'" height="100" width="100" alt="'+data.nom+'"/>';
+							return '<img src="data:image/jpeg;base64,' + data.image + '" height="100" width="100" alt="' + data.nom + '"/>';
 						}
 					},
 					{
 						"targets": 3,
 						"render": function(data) {
-							return '<span id="etat" class="'+data.status+'">'+data.status+'</span>';
+							return '<span id="etat" class="' + data.status + '">' + data.status + '</span>';
 						}
 					}],
 					columns: [
@@ -102,7 +123,11 @@ $(document)
 			})
 
 
-
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					console.log(position.coords.latitude, position.coords.longitude);
+				});
+			}
 			$('#btn').click(
 				function() {
 					var nom = $("#nom");
@@ -215,17 +240,17 @@ $(document)
 						.text();
 
 					var nom = $(this).closest('tr').find('td').eq(
-						1).text();
+						2).text();
 					var lat = $(this).closest('tr').find('td')
-						.eq(2).text();
-					var log = $(this).closest('tr').find('td')
-						.eq(3).text();
-					var adresse = $(this).closest('tr').find('td')
 						.eq(4).text();
-					var ville = $(this).closest('tr').find('td')
+					var log = $(this).closest('tr').find('td')
 						.eq(5).text();
-					var zone = $(this).closest('tr').find('td')
+					var adresse = $(this).closest('tr').find('td')
 						.eq(6).text();
+					var ville = $(this).closest('tr').find('td')
+						.eq(7).text();
+					var zone = $(this).closest('tr').find('td')
+						.eq(8).text();
 
 
 					btn.text('Modifier');
