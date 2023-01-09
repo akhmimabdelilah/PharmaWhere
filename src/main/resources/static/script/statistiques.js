@@ -2,11 +2,26 @@ $(document).ready(function(){
 	function countt(x, data){
 		data = Number(data);
 			let f = 0, data_ = data / 5;
-			inter = setInterval(function(){
+			setTimeout(function(){
 				f += data_;
-				if(data < Math.round(f)) clearInerval(inter);
 				$(x).html(Math.round(f));
 			}, 250);
+			setTimeout(function(){
+				f += data_;
+				$(x).html(Math.round(f));
+			}, 500);
+			setTimeout(function(){
+				f += data_;
+				$(x).html(Math.round(f));
+			}, 750);
+			setTimeout(function(){
+				f += data_;
+				$(x).html(Math.round(f));
+			}, 1000);
+			setTimeout(function(){
+				f += data_;
+				$(x).html(Math.round(f));
+			}, 1250);
 	}
 	
 // # ===============================

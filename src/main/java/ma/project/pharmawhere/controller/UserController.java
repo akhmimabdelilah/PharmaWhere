@@ -25,6 +25,7 @@ import ma.project.pharmawhere.repository.UserRepository;
 @RestController
 @RequestMapping("user")
 public class UserController {
+	
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -35,6 +36,11 @@ public class UserController {
 		return userRepository.findAll();
 	}
 
+	@GetMapping("/{username}/pharmacies")
+	public List<Pharmacie> findPharmaByName(@PathVariable(required = true) String username) {
+		return userRepository.findPharmaciesWithUserName(username);
+	}
+	
 	@PostMapping("/")
 	public User create(@RequestBody User user) {
 		return userService.saveUser(user.getUsername(), user.getPassword(), user.getEmail());

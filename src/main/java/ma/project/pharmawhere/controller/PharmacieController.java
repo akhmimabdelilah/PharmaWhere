@@ -6,6 +6,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.support.HttpRequestHandlerServlet;
 import org.springframework.web.multipart.MultipartFile;
 
 import ma.project.pharmawhere.dto.DatesDTO;
@@ -24,9 +27,11 @@ import ma.project.pharmawhere.dto.TypeDTO;
 import ma.project.pharmawhere.model.GardeType;
 import ma.project.pharmawhere.model.Pharmacie;
 import ma.project.pharmawhere.model.PharmacieStatus;
+import ma.project.pharmawhere.model.User;
 import ma.project.pharmawhere.model.Ville;
 import ma.project.pharmawhere.model.Zone;
 import ma.project.pharmawhere.repository.PharmacieRepository;
+import ma.project.pharmawhere.repository.UserRepository;
 
 @RestController
 @RequestMapping("pharmacie")
@@ -34,6 +39,8 @@ import ma.project.pharmawhere.repository.PharmacieRepository;
 public class PharmacieController {
 	@Autowired
 	private PharmacieRepository pharmacieRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping("/")
 	public List<Pharmacie> findAll() {
@@ -82,16 +89,20 @@ public class PharmacieController {
 	}
 
 	@PostMapping("/")
-	public Pharmacie create(@RequestParam("image") MultipartFile image, @RequestParam("nom") String nom,
+	public Pharmacie create(HttpServletRequest request, @RequestParam("image") MultipartFile image, @RequestParam("nom") String nom,
 			@RequestParam("adresse") String adresse, @RequestParam("lat") double lat, @RequestParam("log") double log,
-			@RequestParam("zone") int zoneId) {
+			@RequestParam("zone") int zoneId, @RequestParam("user") String username) {
+		
 		Pharmacie pharmacie = new Pharmacie();
 		pharmacie.setAdresse(adresse);
 		pharmacie.setLat(lat);
 		pharmacie.setLog(log);
 		pharmacie.setNom(nom);
+	
 		Zone zone = new Zone();
 		zone.setId(zoneId);
+		User user = userRepository.findUserWithName(username).orElse(null);
+		pharmacie.setUser(user);
 		pharmacie.setZone(zone);
 		try {
 			pharmacie.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
