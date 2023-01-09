@@ -23,7 +23,6 @@ import ma.project.pharmawhere.repository.VilleRepository;
 @CrossOrigin
 @RestController
 @RequestMapping("ville")
-@CrossOrigin
 public class VilleController {
 	@Autowired
 	private VilleRepository villeRepository;
