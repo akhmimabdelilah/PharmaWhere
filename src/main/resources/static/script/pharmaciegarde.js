@@ -130,9 +130,8 @@ $(document)
 					var dateDebut = $("#dateDebut");
 					var garde = $("#garde");
 					var pharmacie = $("#pharmacie");
-					alert(dateFin.val())
 					if ($('#btn').text() == 'Ajouter') {
-						alert(dateFin.val())
+
 						var p = {
 							pk: {
 								pharmacieId: pharmacie.val(),
@@ -185,8 +184,6 @@ $(document)
 						var opp = $('#pharmacie option').filter(function () { return $(this).html() == pharmacie; }).val();
 						var opg = $('#garde option').filter(function () { return $(this).html() == garde; }).val();
 
-						alert(opp)
-						alert(opg)
 						var oldLing = $(this).closest('tr')
 							.clone();
 						var newLigne = '<tr style="position: relative;" class="bg-light" ><th scope="row">'

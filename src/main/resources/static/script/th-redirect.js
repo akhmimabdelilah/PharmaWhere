@@ -12,7 +12,7 @@ function show(page) {
 	if (page == "statistiques") {
 		$('a').removeClass('active');
 		$('a:contains(Statistiques)').addClass('active');
-		$("#main-content").load("page/statistiques.html");
+		$("#main-content").load("page/th-statistiques.html");
 		event.preventDefault();
 	}
 	if (page == "garde") {

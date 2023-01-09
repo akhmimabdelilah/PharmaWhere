@@ -1,25 +1,7 @@
-var map = L.map('map');
-map.setView([51.505, -0.09], 13);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	attribution: 'PharmaWhere',
-	maxZoom: 18
-}).addTo(map);
 var username = username||"t";
 $(document)
 	.ready(
 		function () {
-
-
-
-			// Add a marker to the map
-			var marker = L.marker([51.5, -0.09])
-			map.on('click', function (e) {
-				marker.setLatLng([e.latlng.lat, e.latlng.lng]);
-				$("#lat").val(e.latlng.lat);
-				$("#log").val(e.latlng.lng);
-			});
-			marker.addTo(map);
 			async function user() {
 				await $.ajax({
 					url: '/username',
@@ -35,66 +17,62 @@ $(document)
 			}
 			user().then(function () {
 
-				table = $('#tpharmacie')
-					.DataTable({
-						ajax: {
-							url: "user/" + username + "/pharmacies",
-							dataSrc: ''
+			table = $('#tpharmaciegarde')
+				.DataTable({
+					ajax: {
+						url: "pharmaciegarde/"+username+"/user",
+						dataSrc: ''
+					},
+					columns: [
+						{
+							data: "pharmacie.nom"
 						},
-						columnDefs: [{
-							"targets": 1,
-							"render": function (data) {
-								return '<img src="data:image/jpeg;base64,' + data.image + '" height="100" width="100" alt="' + data.nom + '"/>';
+						{
+							data: "garde.type"
+						},
+						{
+							data: "pharmacie.zone.ville.nom"
+						},
+						{
+							data: "pharmacie.zone.nom"
+						},
+						{
+							data: "dateDebut"
+						},
+						{
+							data: "dateFin"
+						},
+						{
+							"render": function () {
+								return '<button type="button" class="btn btn-outline-danger supprimer">Supprimer</button>';
 							}
 						},
 						{
-							"targets": 3,
-							"render": function (data) {
-								return '<span id="etat" class="' + data.status + '">' + data.status + '</span>';
+							"render": function () {
+								return '<button type="button" class="btn btn-outline-secondary modifier">Modifier</button>';
 							}
-						}],
-						columns: [
-							{
-								data: "id"
-							},
-							{
-								data: null
-							},
-							{
-								data: "nom"
-							},
-							{
-								data: null
-							},
-							{
-								data: "lat"
-							},
-							{
-								data: "log"
-							},
-							{
-								data: "adresse"
-							},
-							{
-								data: "zone.ville.nom"
-							},
-							{
-								data: "zone.nom"
-							},
-							{
-								"render": function () {
-									return '<button type="button" class="btn btn-outline-danger supprimer">Supprimer</button>';
-								}
-							},
-							{
-								"render": function () {
-									return '<button type="button" class="btn btn-outline-secondary modifier">Modifier</button>';
-								}
-							}]
+						}]
 
+				});
+
+			$.ajax({
+				url: '/garde/',
+				type: 'GET',
+				success: function (data) {
+					var option = '';
+					data.forEach(e => {
+						option += '<option value =' + e.id + '>' + e.type + '</option>';
 					});
 
-			})
+					$('#garde').append(option);
+				},
+				error: function (jqXHR, textStatus,
+					errorThrown) {
+					console.log(textStatus);
+				}
+
+			});
+
 			$.ajax({
 				url: '/ville/',
 				type: 'GET',
@@ -111,6 +89,9 @@ $(document)
 				}
 
 			});
+
+		});
+
 			async function loadZones(i) {
 				await $.ajax({
 					url: '/ville/' + i + "/zones",
@@ -122,7 +103,6 @@ $(document)
 							option += '<option value =' + e.id + '>' + e.nom + '</option>';
 						});
 						$('#zone').html(option);
-	
 					},
 					error: function (jqXHR, textStatus,
 						errorThrown) {
@@ -131,47 +111,62 @@ $(document)
 
 				});
 			}
+
 			$("#ville").on("change", function () {
 				loadZones($("#ville").val());
 			})
 
+			async function loadPharmacies(i) {
+				await $.ajax({
+					url: '/zone/' + i + "/pharmacies/"+username,
+					type: 'GET',
+					async: true,
+					success: function (data) {
+						var option = '<option value="0">choisir une option</option>';
+						data.forEach(e => {
+							option += '<option value =' + e.id + '>' + e.nom + '</option>';
+						});
+						$('#pharmacie').html(option);
+					},
+					error: function (jqXHR, textStatus,
+						errorThrown) {
+						console.log(textStatus);
+					}
 
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(function (position) {
-					marker.setLatLng([position.coords.latitude, position.coords.longitude]);
 				});
 			}
+			$("#zone").on("change", function () {
+				loadPharmacies($("#zone").val());
+			})
+
 			$('#btn').click(
 				function () {
-					var nom = $("#nom");
-					var lat = $("#lat");
-					var log = $("#log");
-					var adresse = $("#adresse");
-					var zone = $("#zone");
-
+					var dateFin = $("#dateFin");
+					var dateDebut = $("#dateDebut");
+					var garde = $("#garde");
+					var pharmacie = $("#pharmacie");
+				
 					if ($('#btn').text() == 'Ajouter') {
-						var formData = new FormData();
-						formData.append('image', $('#image')[0].files[0]);
+					
 						var p = {
-							nom: nom.val(),
-							lat: lat.val(),
-							log: log.val(),
-							adresse: adresse.val(),
-							zone: {
-								id: zone.val()
+							pk: {
+								pharmacieId: pharmacie.val(),
+								dateDebut: dateDebut.val(),
+								gardeId: garde.val()
+							},
+							pharmacie: { id: pharmacie.val() },
+							dateDebut: dateDebut.val(),
+							dateFin: dateFin.val(),
+							garde: {
+								id: garde.val()
 							}
 						};
-						formData.append('nom', p.nom);
-						formData.append('lat', p.lat);
-						formData.append('log', p.log);
-						formData.append('adresse', p.adresse);
-						formData.append('zone', p.zone.id);
-						formData.append('user', username);
+
 						$.ajax({
-							url: 'pharmacie/',
-							data: formData,
-							contentType: false,
-							processData: false,
+							url: 'pharmaciegarde/',
+							contentType: "application/json",
+							dataType: "json",
+							data: JSON.stringify(p),
 							type: 'POST',
 							async: false,
 							success: function (data, textStatus,
@@ -184,7 +179,7 @@ $(document)
 							}
 						});
 						$("#main-content").load(
-							"./page/th-pharmacie.html");
+							"./page/pharmaciegarde.html");
 					}
 				});
 
@@ -194,14 +189,23 @@ $(document)
 					'.supprimer',
 					function () {
 
-						var id = $(this).closest('tr').find(
+						var pharmacie = $(this).closest('tr').find(
 							'td').eq(0).text();
+						var garde = $(this).closest('tr').find(
+							'td').eq(1).text();
+						var dateDebut = $(this).closest('tr').find(
+							'td').eq(2).text();
+
+
+						var opp = $('#pharmacie option').filter(function () { return $(this).html() == pharmacie; }).val();
+						var opg = $('#garde option').filter(function () { return $(this).html() == garde; }).val();
+
 						var oldLing = $(this).closest('tr')
 							.clone();
 						var newLigne = '<tr style="position: relative;" class="bg-light" ><th scope="row">'
-							+ id
+							+ opp + ' ' + opg
 							+ '</th><td colspan="4" style="height: 100%;">';
-						newLigne += '<h4 class="d-inline-flex">Voulez vous vraiment supprimer cette pharmacie ? </h4>';
+						newLigne += '<h4 class="d-inline-flex">Voulez vous vraiment supprimer cette garde ? </h4>';
 						newLigne += '<button type="button" class="btn btn-outline-primary btn-sm confirmer" style="margin-left: 25px;">Oui</button>';
 						newLigne += '<button type="button" class="btn btn-outline-danger btn-sm annuler" style="margin-left: 25px;">Non</button></td></tr>';
 
@@ -219,9 +223,12 @@ $(document)
 									e.preventDefault();
 									$
 										.ajax({
-											url: 'pharmacie/'
-												+ id,
-											data: {},
+											url: 'pharmaciegarde/one',
+											data: JSON.stringify({
+												pharmacieId: opp,
+												gardeId: opg,
+												dateDebut: dateDebut
+											}),
 											type: 'DELETE',
 											async: false,
 											success: function (
@@ -252,63 +259,70 @@ $(document)
 
 					});
 
+
+
+
+
+
 			$('#table-content').on(
 				'click',
 				'.modifier',
 				async function () {
 					var btn = $('#btn');
-					var id = $(this).closest('tr').find('td').eq(0)
-						.text();
 
-					var nom = $(this).closest('tr').find('td').eq(
-						2).text();
-					var lat = $(this).closest('tr').find('td')
+					var dateFin = $(this).closest('tr').find('td').eq(5).text();
+					var dateDebut = $(this).closest('tr').find('td')
 						.eq(4).text();
-					var log = $(this).closest('tr').find('td')
-						.eq(5).text();
-					var adresse = $(this).closest('tr').find('td')
-						.eq(6).text();
 					var ville = $(this).closest('tr').find('td')
-						.eq(7).text();
+						.eq(2).text();
 					var zone = $(this).closest('tr').find('td')
-						.eq(8).text();
+						.eq(3).text();
+					var garde = $(this).closest('tr').find('td')
+						.eq(1).text();
+					var pharmacie = $(this).closest('tr').find('td')
+						.eq(0).text();
 
 
 					btn.text('Modifier');
-					$("#nom").val(nom);
-					$("#lat").val(lat);
-					$("#log").val(log);
-					marker.setLatLng([+lat, +lng]);
-					map.flyTo([+lat, +lng], 12);
-					$("#adresse").val(adresse);
+					$("#dateDebut").val(dateDebut);
+					$("#dateFin").val(dateFin);
+
 
 					var op = $('#ville option').filter(function () { return $(this).html() == ville; }).val();
 					$("#ville").val(op);
+
 					await loadZones(op);
 
 					var opi = $('#zone option').filter(function () { return $(this).html() == zone; }).val();
 					$("#zone").val(opi);
 
-					$("#id").val(id);
+					await loadPharmacies(opi);
+
+					var op = $('#pharmacie option').filter(function () { return $(this).html() == pharmacie; }).val();
+					$("#pharmacie").val(op);
+
+					var op = $('#garde option').filter(function () { return $(this).html() == garde; }).val();
+					$("#garde").val(op);
 
 					btn.click(function (e) {
 						e.preventDefault();
 						var p = {
-							id: $("#id").val(),
-							nom: $("#nom").val(),
-							lat: $("#lat").val(),
-							log: $("#log").val(),
-							adresse: $("#adresse").val(),
-							zone: {
-								id: $("#zone").val()
+							pk: {
+								pharmacieId: $("#pharmacie").val(),
+								dateDebut: $("#dateDebut").val(),
+								gardeId: $("#garde").val()
 							},
-							image: {
-								data: $("#image").val()
+							pharmacie: { id: $("#pharmacie").val() },
+							dateDebut: $("#dateDebut").val(),
+							dateFin: $("#dateFin").val(),
+							garde: {
+								id: $("#garde").val()
 							}
+
 						};
 						if ($('#btn').text() == 'Modifier') {
 							$.ajax({
-								url: 'pharmacie/',
+								url: 'pharmaciegarde/',
 								contentType: "application/json",
 								dataType: "json",
 								data: JSON.stringify(p),
@@ -317,11 +331,10 @@ $(document)
 								success: function (data,
 									textStatus, jqXHR) {
 									table.ajax.reload();
-									$("#nom").val('');
-									$("#lat").val('');
-									$("#log").val('');
-									$("#adresse").val('');
-									$("#zone").val('');
+									$("#dateFin").val('');
+									$("#dateDebut").val('');
+									$("#garde").val('');
+									$("#pharmacie").val('');
 									btn.text('Ajouter');
 								},
 								error: function (jqXHR, textStatus,
@@ -330,7 +343,7 @@ $(document)
 								}
 							});
 							$("#main-content").load(
-								"./page/pharmacie.html");
+								"./page/pharmaciegarde.html");
 						}
 					});
 				});

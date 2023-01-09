@@ -5,6 +5,7 @@ $(document).ready(function(){
     	type:"GET",
     	success:function(data){
     		$(".user-name").html(data);
+        $("#smiya").html(data)
     	}
     });
 	

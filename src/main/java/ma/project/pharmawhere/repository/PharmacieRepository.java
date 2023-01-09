@@ -26,6 +26,9 @@ public interface PharmacieRepository extends JpaRepository<Pharmacie, Integer> {
 	List<Pharmacie> getPharmaciesByZone(@Param("zone") Zone zone);
 	
 	
+	@Query("select p from Pharmacie p, Zone z, User u Where p.zone = z AND z = :zone AND p.user = u AND u.username = :username AND p.status = 1")
+	List<Pharmacie> getPharmaciesByZoneAndUser(@Param("zone") Zone zone,@Param("username") String username);
+	
 	
 	
 	@Query("select Distinct p from Pharmacie p, PharmacieGarde pg Where pg.pharmacie = p AND pg.dateDebut > :date1 AND pg.dateFin < :date2 AND (pg.garde.type = :J or pg.garde.type = :N) and p.status = 1")

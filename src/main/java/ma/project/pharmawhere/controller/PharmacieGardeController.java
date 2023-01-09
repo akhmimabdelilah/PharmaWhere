@@ -1,5 +1,6 @@
 package ma.project.pharmawhere.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import ma.project.pharmawhere.dto.PharmacieGardeDTO;
 import ma.project.pharmawhere.model.PharmacieGarde;
 import ma.project.pharmawhere.model.PharmacieGardePK;
 import ma.project.pharmawhere.repository.PharmacieGardeRepository;
@@ -25,20 +26,23 @@ public class PharmacieGardeController {
 	private PharmacieGardeRepository pharmacieGardeRepository;
 
 	@GetMapping("/")
-	public List<PharmacieGarde> findAll() {
-		return pharmacieGardeRepository.findAll();
+	public List<PharmacieGardeDTO> findAll() {
+		List<PharmacieGardeDTO> ll = new ArrayList<>();
+		for(PharmacieGarde pg : pharmacieGardeRepository.findAll()) {
+			PharmacieGardeDTO pgdto= new PharmacieGardeDTO();
+			pgdto.setDateDebut(pg.getDateDebut());
+			pgdto.setDateFin(pg.getDateFin());
+			pgdto.setGarde(pg.getGarde());
+			pgdto.setPharmacie(pg.getPharmacie());
+			pgdto.setPk(pg.getPk());
+			ll.add(pgdto);
+		}
+		return ll;
 	}
 
 	@PostMapping("/")
 	public PharmacieGarde create(@RequestBody PharmacieGarde pharmacieGarde) {
-		/*PharmacieGardePK pk = new PharmacieGardePK(pharmacieGarde.getPharmacieId(), pharmacieGarde.getGardeId(),
-				pharmacieGarde.getDateDebut());
-		Pharmacie pharmacie = pharmacieRepository.findById(pharmacieGarde.getPharmacieId());
-		Garde garde = gardeRepository.findById(pharmacieGarde.getGardeId());
-		//System.out.println(pk);
-		PharmacieGarde pGarde = new PharmacieGarde(pk, null, pharmacieGarde.getDateFin(),
-				pharmacie, garde);*/
-	
+		
 		return pharmacieGardeRepository.save(pharmacieGarde);
 	}
 

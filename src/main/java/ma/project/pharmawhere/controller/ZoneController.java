@@ -45,6 +45,11 @@ public class ZoneController {
 	public List<Pharmacie> findPharmacie(@PathVariable(required = true) int id) {
 		return pharmacieRepository.getPharmaciesByZone(zoneRepository.findById(id));
 	}
+	
+	@GetMapping("/{id}/pharmacies/{username}")
+	public List<Pharmacie> findPharmacie(@PathVariable(required = true) int id, @PathVariable(required = true) String username) {
+		return pharmacieRepository.getPharmaciesByZoneAndUser(zoneRepository.findById(id), username);
+	}
 
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable(required = true) int id) {
