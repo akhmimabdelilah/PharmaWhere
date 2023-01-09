@@ -1,5 +1,6 @@
 package ma.project.pharmawhere.controller;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,10 @@ public class VilleController {
 		return villeRepository.count();
 	}
 	
+	@GetMapping("/count/pharmacies")
+	public Collection<?> countAll() {
+		return villeRepository.findPharmacies();
+	}
 	
 
 }

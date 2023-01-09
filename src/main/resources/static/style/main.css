@@ -8,11 +8,10 @@ and open the template in the editor.
     Author     : mosab
 */
 @font-face{
-    font-family: Quicksand;
-    src: url('../fonts/quicksand/Quicksand-Regular.ttf');
+    font-family: Quicksand; src: url('../fonts/Satoshi-Regular.ttf');
 }
 body {
-    font-family: Quicksand, sans-serif;
+    font-family: Quicksand, serif;
 
 }
 #nav{
@@ -20,6 +19,14 @@ body {
     height: 60px;
 
 }
+header.header{
+    height: 75px;
+    background-color: rgba(141, 36, 36, 0.63);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+header.header 
 
 #nav a:link,#nav a:hover,#nav a:visited{
     color: black;

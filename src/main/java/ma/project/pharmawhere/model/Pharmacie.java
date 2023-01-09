@@ -39,7 +39,6 @@ public class Pharmacie {
 	@ManyToOne
 	private Zone zone;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "pharmacie", fetch = FetchType.EAGER)
 	private List<PharmacieGarde> gardes;
 

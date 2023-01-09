@@ -130,7 +130,11 @@ public class PharmacieController {
 	public long count() {
 		return pharmacieRepository.count();
 	}
-
+	
+	@GetMapping("/count/enattend")
+	public long countEnAttend() {
+		return pharmacieRepository.getEnAttendCount();
+	}
 	@PostMapping("/nearby")
 	public List<Pharmacie> nearby(@RequestParam("log") double log, @RequestParam("lat") double lat) {
 		return pharmacieRepository.nearby(log, lat, 2);

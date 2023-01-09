@@ -15,6 +15,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -44,41 +48,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// .loginPage("/login.html").permitAll()
 		// .and().logout().permitAll();
 
-		http.csrf()
-		.disable()
-		.exceptionHandling()
-		.authenticationEntryPoint(new DeniedAuthenticationEntryPoint())
-		.and().authenticationProvider(getProvider())
-		.formLogin()
-		.loginProcessingUrl("/login")
-		.successHandler(new AuthentificationLoginSuccessHandler())
-		.failureHandler(new UrlAuthenticationFailureHandler())
-		.and().logout().logoutUrl("/logout")
-		.logoutSuccessHandler(new AuthentificationLogoutSuccessHandler())
-		.invalidateHttpSession(true)
-		.and()
-		.authorizeRequests().antMatchers("/login").permitAll()
-		.antMatchers("/logout").permitAll()
-		.antMatchers("/index.html").authenticated()
-		.antMatchers("/").hasAnyRole("USER", "ADMIN")
-		.antMatchers("/produits/**").authenticated()
-		.antMatchers("/marques/**").authenticated()
-		.antMatchers("/dist/**", "/fonts/**", "/img/**", "/inc/**",
-						"/css/**", "/js/**", "/vendor/**", "/sass/**", "/style/**")
-		.permitAll()
-		.anyRequest().permitAll();
+		SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+
+		http.csrf().disable().exceptionHandling().authenticationEntryPoint(new DeniedAuthenticationEntryPoint()).and()
+				.authenticationProvider(getProvider()).formLogin().loginProcessingUrl("/login")
+				.successHandler(new AuthentificationLoginSuccessHandler())
+				.failureHandler(new UrlAuthenticationFailureHandler()).and().logout().logoutUrl("/logout")
+				.logoutSuccessHandler(new AuthentificationLogoutSuccessHandler()).invalidateHttpSession(true).and()
+				.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/logout").permitAll()
+				.antMatchers("/index.html").authenticated().antMatchers("/").hasAnyRole("USER", "ADMIN")
+				.antMatchers("/produits/**").authenticated().antMatchers("/marques/**").authenticated()
+				.antMatchers("/dist/**", "/fonts/**", "/img/**", "/inc/**", "/css/**", "/js/**", "/vendor/**",
+						"/sass/**", "/style/**")
+				.permitAll().anyRequest().permitAll();
 
 	}
-	
-   
-	public class DeniedAuthenticationEntryPoint extends Http403ForbiddenEntryPoint{
+
+	public class DeniedAuthenticationEntryPoint extends Http403ForbiddenEntryPoint {
 		@Override
 		public void commence(HttpServletRequest request, HttpServletResponse response,
 				AuthenticationException authException) throws IOException, ServletException {
 			// TODO Auto-generated method stub
 			response.sendRedirect("/login.html");
 		}
-		
+
 	}
 
 	private class UrlAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -86,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 				AuthenticationException exception) throws IOException, ServletException {
 			// TODO Auto-generated method stub
-		    super.onAuthenticationFailure(request, response, exception);
+			super.onAuthenticationFailure(request, response, exception);
 			response.sendRedirect("/login.html");
 		}
 	}
@@ -96,8 +89,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 				Authentication authentication) throws IOException, ServletException {
 			response.setStatus(HttpServletResponse.SC_OK);
-			
-			response.sendRedirect("/index.html");
+
+			if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))
+				response.sendRedirect("/index.html");
+			else
+				response.sendRedirect("/pharmacien/");
 		}
 	}
 
@@ -107,6 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				Authentication authentication) throws IOException, ServletException {
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.sendRedirect("/login.html");
+
 		}
 	}
 
@@ -115,5 +112,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		AppAuthProvider provider = new AppAuthProvider();
 		provider.setUserDetailsService(userDetailsService);
 		return provider;
+	}
+
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }

@@ -1,5 +1,13 @@
 $(document).ready(function(){
-	
+	function countt(x, data){
+		data = Number(data);
+			let f = 0, data_ = data / 5;
+			inter = setInterval(function(){
+				f += data_;
+				if(data < Math.round(f)) clearInerval(inter);
+				$(x).html(Math.round(f));
+			}, 250);
+	}
 	
 // # ===============================
 // # = Nombre des produits
@@ -9,7 +17,7 @@ $(document).ready(function(){
 		data : '',
 		type : 'GET',
 		success : function(data) {
-			$('#pharmacie').html(data);
+			countt('#pharmacie',data);
 		},
 		error : function(jqXHR, textStatus,
 				errorThrown) {
@@ -21,7 +29,7 @@ $(document).ready(function(){
 		data : '',
 		type : 'GET',
 		success : function(data) {
-			$('#ville').html(data);
+			countt('#ville', data);
 		},
 		error : function(jqXHR, textStatus,
 				errorThrown) {
@@ -33,7 +41,7 @@ $(document).ready(function(){
 		data : '',
 		type : 'GET',
 		success : function(data) {
-			$('#zone').html(data);
+			countt('#zone', data);
 		},
 		error : function(jqXHR, textStatus,
 				errorThrown) {
@@ -41,11 +49,23 @@ $(document).ready(function(){
 		}
 	});
 	$.ajax({
-		url : 'pharmaciegarde/count',
+		url : 'pharmacie/count/enattend',
 		data : '',
 		type : 'GET',
 		success : function(data) {
-			$('#garde').html(data);
+			countt('#garde',data);
+		},
+		error : function(jqXHR, textStatus,
+				errorThrown) {
+			console.log(textStatus);
+		}
+	});
+	$.ajax({
+		url : 'user/count',
+		data : '',
+		type : 'GET',
+		success : function(data) {
+			countt('#user',data);
 		},
 		error : function(jqXHR, textStatus,
 				errorThrown) {
@@ -67,8 +87,8 @@ $(document).ready(function(){
 		async : false,
 		success : function(data) {
 			console.log(data);
-			var labels = data.map(x=>x[1]);
-			var dt = data.map(x=>x[0]);
+			var labels = data.map(x=>x[0]);
+			var dt = data.map(x=>x[1]);
 			
 			
 				
@@ -141,7 +161,7 @@ $(document).ready(function(){
 // # = Nombre des machines par marque
 // # ===============================
 	$.ajax({
-		url : 'zone/count/pharmacies',
+		url : 'ville/count/pharmacies',
 		contentType : "application/json",
 		dataType : "json",
 		data : '',
@@ -150,8 +170,8 @@ $(document).ready(function(){
 		success : function(data) {
 			console.log(data);
 			
-			var labels = data.map(x=>x[1]);
-			var dt = data.map(x=>x[0]);
+			var labels = data.map(x=>x[0]);
+			var dt = data.map(x=>x[1]);
 				
 			var ctx = document.getElementById('myChart').getContext('2d');
 			var myChart = new Chart(ctx, {
@@ -182,7 +202,7 @@ $(document).ready(function(){
 			    options: {
 			    	title: {
 	                    display: true,
-	                    text: 'Nombre des pharmacies par zone',
+	                    text: 'Nombre des pharmacies par ville',
 	                    fontSize: 21,
 	                    padding: 20,
 	                    fontFamily: 'Calibri',
@@ -205,7 +225,7 @@ $(document).ready(function(){
 	                xAxes: [{
 		                    scaleLabel: {
 		                      display: true,
-		                      labelString: 'Zones'
+		                      labelString: 'Villes'
 		                    }
 		            }],
 			        }

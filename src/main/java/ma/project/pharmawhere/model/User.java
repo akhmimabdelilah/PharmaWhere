@@ -1,19 +1,29 @@
 package ma.project.pharmawhere.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.Data;
+
 @Entity
+@Data
 public class User implements UserDetails {
 	/**
 	 * 
@@ -21,24 +31,17 @@ public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer userId;
+	private Integer  userId;
 	private String username;
+	@Column(unique = true)
+	private String email;
 	private String password;
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Pharmacie> pharmacies;
 
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
-
-	public String getUsername() {
-		return username;
-	}
+	@Enumerated(EnumType.STRING)
+    private Role role;
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -60,20 +63,16 @@ public class User implements UserDetails {
 		return false;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+    	String ROLE_PREFIX = "ROLE_";
+    	List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
 
-	public String getPassword() {
-		return password;
-	}
+        list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.name()));
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+        return list;
+    }
+	
+	
 }

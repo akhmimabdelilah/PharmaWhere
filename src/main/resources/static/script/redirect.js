@@ -33,4 +33,10 @@ function show(page) {
 		$("#main-content").load("page/pharmaciegarde.html");
 		event.preventDefault();
 	}
+	if (page == "user") {
+		$('a').removeClass('active');
+		$('a:contains(Pharmacien)').addClass('active');
+		$("#main-content").load("page/user.html");
+		event.preventDefault();
+	}
 }

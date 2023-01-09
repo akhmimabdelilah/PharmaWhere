@@ -6,15 +6,15 @@
 		<section class="statistic statistic2">
 			<div class="container">
 				<div class="row">
-					<a href="./index.html" onclick="show('pharmacie')" class="col-md-6 col-lg-3">
+					<a href="./index.html" onclick="show('pharmacie')" class="col-md-6 col-lg-4">
 						<div class="statistic__item statistic__item--green">
 							<h2 class="number" id="pharmacie">0</h2>
 							<span class="desc">pharmacies</span>
 							<div class="icon">
-								<i class="zmdi zmdi-plus-square"></i>
+								<i class="zmdi zmdi-hospital"></i>
 							</div>
 						</div>
-					</a> <a href="./index.html" onclick="show('ville')" class="col-md-6 col-lg-3">
+					</a> <a href="./index.html" onclick="show('ville')" class="col-md-6 col-lg-4">
 
 						<div class="statistic__item statistic__item--orange">
 							<h2 class="number" id="ville">0</h2>
@@ -23,7 +23,7 @@
 								<i class="zmdi zmdi-city"></i>
 							</div>
 						</div>
-					</a> <a href="./index.html" onclick="show('zone')" class="col-md-6 col-lg-3">
+					</a> <a href="./index.html" onclick="show('zone')" class="col-md-6 col-lg-4">
 						<div class="statistic__item statistic__item--blue">
 							<h2 class="number" id="zone">0</h2>
 							<span class="desc">zones</span>
@@ -31,12 +31,21 @@
 								<i class="zmdi zmdi-map"></i>
 							</div>
 						</div>
-					</a> <a href="./index.html"  onclick="show('garde')" class="col-md-6 col-lg-3">
+					</a> <a href="./index.html"  onclick="show('pharmacie')" class="col-md-6 col-lg-6">
 						<div class="statistic__item statistic__item--red">
 							<h2 id="garde" class="number">0</h2>
-							<span  class="desc">Pharmacies de garde</span>
+							<span  class="desc">Pharmacies en Attend</span>
 							<div class="icon">
-								<i class="zmdi zmdi-navigation"></i>
+								<i class="zmdi zmdi-pin"></i>
+							</div>
+						</div>
+					</a>
+					<a href="./index.html"  onclick="show('user')" class="col-md-6 col-lg-6">
+						<div class="statistic__item statistic__item--orange">
+							<h2 id="user" class="number">0</h2>
+							<span  class="desc">Pharmaciens</span>
+							<div class="icon">
+								<i class="zmdi zmdi-account-box-o"></i>
 							</div>
 						</div>
 					</a>
