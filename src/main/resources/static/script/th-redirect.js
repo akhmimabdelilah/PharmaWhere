@@ -1,6 +1,6 @@
 $('a').removeClass('active');
 $('a:contains(Statistiques)').addClass('active');
-$("#main-content").load("page/statistiques.html");
+$("#main-content").load("page/th-statistiques.html");
 
 function show(page) {
 	if (page == "pharmacie") {

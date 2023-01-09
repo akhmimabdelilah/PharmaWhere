@@ -21,7 +21,7 @@ body {
 }
 header.header{
     height: 75px;
-    background-color: rgba(141, 36, 36, 0.63);
+    background-color: rgba(112, 112, 112, 0.63);
     display: flex;
     align-items: center;
     justify-content: space-between;
