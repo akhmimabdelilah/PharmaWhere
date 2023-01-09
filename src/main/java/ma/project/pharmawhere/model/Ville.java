@@ -28,4 +28,5 @@ public class Ville {
 	@JsonIgnore
 	@OneToMany(mappedBy = "ville")
 	private List<Zone> zones;
+	
 }

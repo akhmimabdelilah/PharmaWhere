@@ -21,6 +21,7 @@ import ma.project.pharmawhere.repository.ZoneRepository;
 @CrossOrigin
 @RestController
 @RequestMapping("zone")
+@CrossOrigin
 public class ZoneController {
 	@Autowired
 	private ZoneRepository zoneRepository;

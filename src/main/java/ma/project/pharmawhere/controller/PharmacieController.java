@@ -28,9 +28,9 @@ import ma.project.pharmawhere.model.Ville;
 import ma.project.pharmawhere.model.Zone;
 import ma.project.pharmawhere.repository.PharmacieRepository;
 
-@CrossOrigin
 @RestController
 @RequestMapping("pharmacie")
+@CrossOrigin
 public class PharmacieController {
 	@Autowired
 	private PharmacieRepository pharmacieRepository;
