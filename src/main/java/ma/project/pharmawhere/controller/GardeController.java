@@ -18,7 +18,6 @@ import ma.project.pharmawhere.repository.GardeRepository;
 @CrossOrigin
 @RestController
 @RequestMapping("garde")
-@CrossOrigin
 public class GardeController {
 	@Autowired
 	private GardeRepository gardeRepository;
